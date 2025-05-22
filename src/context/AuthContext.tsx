@@ -1,13 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
-
-interface User {
-  username: string;
-  avatar?: string;
-  name?: string;
-  surname?: string;
-}
+import type { User } from '../types/user';
 
 interface AuthContextType {
   user: User | null;
