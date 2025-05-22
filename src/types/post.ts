@@ -3,7 +3,7 @@ import type { User } from './user';
 export interface Post {
   image?: string;
   message: string;
-  likes?: User[];
+  likes?: Array<User>;
   author: User;
   create_at: Date;
   location: string;

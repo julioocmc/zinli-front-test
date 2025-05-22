@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useUsers } from '../hooks/useUsers';
@@ -21,38 +21,44 @@ export default function Register() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showSplash, setShowSplash] = useState(false);
+  const [checkingUsername, setCheckingUsername] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const checkUsernameAvailability = async () => {
+    if (formData.username.length < 3) {
+      toast.error('El username es demasiado corto para verificar');
+      return;
+    }
+    setCheckingUsername(true);
+
+    await new Promise((r) => setTimeout(r, 1200));
+
+    const exists = findUserByUsername(formData.username);
+    if (exists) {
+      toast.error('Username no disponible');
+    } else {
+      toast.success('Username disponible');
+    }
+
+    setCheckingUsername(false);
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const validate = () => {
-    const { username, name, surname, avatar } = formData;
+    const { username, name, surname } = formData;
     if (username.length < 3 || username.length > 20) return 'Username inválido';
     if (name.length < 3 || name.length > 20) return 'Nombre inválido';
     if (surname.length < 3 || surname.length > 20) return 'Apellido inválido';
-    if (avatar && (!avatar.endsWith('.png') || avatar.length > 200))
-      return 'Avatar debe ser un .png válido y de tamaño razonable';
+
     return '';
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
-    if (file.type !== 'image/png') {
-      const err = 'Solo se aceptan archivos PNG';
-      setError(err);
-      toast.error(err);
-      return;
-    }
-
-    if (file.size > 200 * 1024) {
-      const err = 'El archivo PNG debe ser menor a 200KB';
-      setError(err);
-      toast.error(err);
-      return;
-    }
 
     const reader = new FileReader();
     reader.onload = () => {
@@ -61,7 +67,11 @@ export default function Register() {
         avatar: reader.result as string,
       }));
       setError('');
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     };
+
     reader.readAsDataURL(file);
   };
 
@@ -112,14 +122,32 @@ export default function Register() {
                   onSubmit={handleSubmit}
                   className="w-full flex flex-col gap-3"
                 >
-                  <input
-                    name="username"
-                    placeholder="Username"
-                    value={formData.username}
-                    onChange={handleChange}
-                    className="p-2 rounded bg-bg-100 text-text-100 placeholder-text-200"
-                    required
-                  />
+                  <div className="relative w-full">
+                    <input
+                      name="username"
+                      placeholder="Username"
+                      value={formData.username}
+                      onChange={handleChange}
+                      className="p-2 rounded bg-bg-100 text-text-100 placeholder-text-200 w-full pr-28" // espacio para el botón
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={checkUsernameAvailability}
+                      disabled={checkingUsername}
+                      className="absolute top-1/2 right-1.5 -translate-y-1/2 bg-bg-300 cursor-pointer text-text-100 rounded px-3 py-1 text-sm flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {checkingUsername ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                          Verificando...
+                        </>
+                      ) : (
+                        'Verificar'
+                      )}
+                    </button>
+                  </div>
+
                   <input
                     name="name"
                     placeholder="Nombre"
@@ -149,6 +177,7 @@ export default function Register() {
                       accept="image/png"
                       onChange={handleFileChange}
                       className="hidden"
+                      ref={fileInputRef}
                     />
 
                     {formData.avatar && (
@@ -160,10 +189,13 @@ export default function Register() {
                         />
                         <button
                           type="button"
-                          onClick={() =>
-                            setFormData((prev) => ({ ...prev, avatar: '' }))
-                          }
-                          className="absolute -top-2 -right-2 bg-red-500 rounded-full w-6 h-6 text-white text-xs flex items-center justify-center hover:bg-red-600"
+                          onClick={() => {
+                            setFormData((prev) => ({ ...prev, avatar: '' }));
+                            if (fileInputRef.current) {
+                              fileInputRef.current.value = '';
+                            }
+                          }}
+                          className="absolute -top-2 -right-2 bg-red-500 rounded-full w-5 h-5 mt-2 text-white text-xs flex items-center justify-center cursor-pointer hover:bg-red-600"
                           aria-label="Eliminar avatar"
                         >
                           ×
