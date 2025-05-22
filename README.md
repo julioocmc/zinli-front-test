@@ -1,54 +1,44 @@
-# React + TypeScript + Vite
+# Zinli Front-End Test
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![CI](https://github.com/tu-user/tu-repo/actions/workflows/ci.yml/badge.svg)
 
-Currently, two official plugins are available:
+Pequeña red social tipo Instagram/Twitter hecha con **React + Vite**, **TypeScript**, **Tailwind** y persistencia en `localStorage`.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features principales
 
-## Expanding the ESLint configuration
+- Registro y login (solo `username` para login)
+- Crear publicaciones con imagen, ubicación, estados **draft/published/deleted**
+- Likes únicos con animación (Framer Motion)
+- Perfil con pestañas **Publicados / Borradores / Eliminados**
+- Estado persistente mediante `PostsContext`
+- UI accesible y responsiva
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Workflow
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+| Paso          | Regla                                               |
+| ------------- | --------------------------------------------------- |
+| `main`        | Rama **protegida** – no se permiten pushes directos |
+| Ramas feature | `feat/*`, correcciones `fix/*`, tareas `chore/*`    |
+| Pull Requests | Revisión obligatoria (1 approval) para merge        |
+| CI            | GitHub Actions ejecuta `pnpm build` en cada push/PR |
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Ejemplos de PR cerrados:  
+`setup/project-structure`, `feat/login`, `feat/post`, `docs/workflow`.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+## Scripts
+
+| Comando        | Descripción                   |
+| -------------- | ----------------------------- |
+| `pnpm dev`     | Servidor local con HMR        |
+| `pnpm build`   | Compilación producción        |
+| `pnpm preview` | Vista previa producción local |
+
+## Stack
+
+- React 18 + Vite + TS
+- Tailwind CSS con paleta custom
+- React Router v6
+- Sonner (toasts)
+- Heroicons, Lucide, Framer Motion
