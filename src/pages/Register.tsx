@@ -128,7 +128,7 @@ export default function Register() {
                       placeholder="Username"
                       value={formData.username}
                       onChange={handleChange}
-                      className="p-2 rounded bg-bg-100 text-text-100 placeholder-text-200 w-full pr-28" // espacio para el botón
+                      className="p-2 rounded bg-bg-100 text-text-100 placeholder-text-200 w-full pr-28"
                       required
                     />
                     <button

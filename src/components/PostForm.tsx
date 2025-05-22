@@ -1,24 +1,32 @@
-import { useState } from 'react';
+// src/components/PostForm.tsx
+import { useState, useRef } from 'react';
+import { toast } from 'sonner';
+import { Image as ImageIcon } from 'lucide-react';
 import type { Post } from '../types/post';
 import type { User } from '../types/user';
 
 interface PostFormProps {
-  addPost: (post: Post) => void;
+  addPost: (post: Omit<Post, 'id'>) => void;
   currentUser: User;
 }
 
 export default function PostForm({ addPost, currentUser }: PostFormProps) {
   const [message, setMessage] = useState('');
   const [location, setLocation] = useState('');
-  const [imageBase64, setImageBase64] = useState<string | undefined>(undefined);
-  const [error, setError] = useState('');
+  const [asDraft, setAsDraft] = useState(false);
+  const [imageBase64, setImageBase64] = useState<string | undefined>();
+  const fileRef = useRef<HTMLInputElement | null>(null);
 
   const validate = () => {
-    if (message.length < 10 || message.length > 500)
-      return 'El mensaje debe tener entre 10 y 500 caracteres';
-    if (location.length < 4 || location.length > 30)
-      return 'La ubicación debe tener entre 4 y 30 caracteres';
-    return '';
+    if (message.length < 10 || message.length > 500) {
+      toast.error('El mensaje debe tener entre 10 y 500 caracteres');
+      return false;
+    }
+    if (location.length < 4 || location.length > 30) {
+      toast.error('La ubicación debe tener entre 4 y 30 caracteres');
+      return false;
+    }
+    return true;
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,81 +35,93 @@ export default function PostForm({ addPost, currentUser }: PostFormProps) {
       setImageBase64(undefined);
       return;
     }
-
     if (!file.type.startsWith('image/')) {
-      setError('El archivo debe ser una imagen');
+      toast.error('El archivo debe ser una imagen');
       return;
     }
 
     const reader = new FileReader();
-    reader.onloadend = () => {
-      setImageBase64(reader.result as string);
-      setError('');
-    };
+    reader.onloadend = () => setImageBase64(reader.result as string);
     reader.readAsDataURL(file);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const validationError = validate();
-    if (validationError) {
-      setError(validationError);
-      return;
-    }
-    const newPost: Post = {
+    if (!validate()) return;
+
+    const newPost: Omit<Post, 'id'> = {
       message,
       location,
       image: imageBase64,
       author: currentUser,
       create_at: new Date(),
       likes: [],
-      status: 'published',
+      status: asDraft ? 'drafted' : 'published',
     };
+
     addPost(newPost);
     setMessage('');
     setLocation('');
     setImageBase64(undefined);
-    setError('');
+    toast.success('¡Publicación creada!');
   };
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-primary-100 p-4 rounded mb-6 text-white w-full max-w-full"
+      className="bg-primary-100/90 p-6 rounded-2xl mb-6 shadow-xl text-text-100 flex flex-col space-y-4"
     >
-      {error && <p className="mb-2 text-red-400 text-sm">{error}</p>}
-
       <textarea
-        placeholder="Escribe tu publicación (10-500 caracteres)"
         value={message}
         onChange={(e) => setMessage(e.target.value)}
-        className="w-full p-2 mb-2 rounded text-black text-sm"
+        placeholder="Comparte algo interesante…"
         rows={4}
         required
+        className="w-full rounded-lg border border-primary-300 bg-accent-200 p-3 text-sm placeholder:text-text-200 focus:outline-none focus:ring-2 focus:ring-accent-100"
       />
-
-      <input
-        type="text"
-        placeholder="Ubicación (4-30 caracteres)"
-        value={location}
-        onChange={(e) => setLocation(e.target.value)}
-        className="w-full p-2 mb-2 rounded text-black text-sm"
-        required
-      />
-
-      <input
-        type="file"
-        accept="image/*"
-        onChange={handleImageChange}
-        className="mb-4 text-sm"
-      />
-
-      <button
-        type="submit"
-        className="bg-bg-300 hover:bg-bg-100 text-text-100 px-4 py-2 rounded w-full sm:w-auto"
-      >
-        Publicar
-      </button>
+      <div className="grid grid-cols-12 gap-4 items-end">
+        <input
+          type="text"
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
+          placeholder="¿Dónde te encuentras?"
+          required
+          className="col-span-12 sm:col-span-8 md:col-span-7 rounded-lg border border-primary-300 bg-accent-200 p-3 text-sm placeholder:text-text-200 focus:outline-none focus:ring-2 focus:ring-accent-100"
+        />
+        <div className="col-span-12 sm:col-span-4 md:col-span-5">
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            className="hidden"
+          />
+          <button
+            type="button"
+            onClick={() => fileRef.current?.click()}
+            className="w-full h-11 cursor-pointer inline-flex items-center justify-center gap-2 rounded-lg border border-primary-300 bg-accent-200 hover:bg-bg-300 transition"
+          >
+            <ImageIcon className="w-5 h-5" />
+            {imageBase64 ? 'Imagen seleccionada' : 'Adjuntar foto'}
+          </button>
+        </div>
+      </div>
+      <label className="flex items-center gap-2 text-sm cursor-pointer">
+        <input
+          type="checkbox"
+          checked={asDraft}
+          onChange={() => setAsDraft(!asDraft)}
+        />
+        Guardar como borrador
+      </label>
+      <div className="flex justify-end">
+        <button
+          type="submit"
+          className="px-8 py-2 cursor-pointer rounded-lg bg-accent-200 border border-primary-300 shadow-md font-semibold"
+        >
+          Publicar
+        </button>
+      </div>
     </form>
   );
 }

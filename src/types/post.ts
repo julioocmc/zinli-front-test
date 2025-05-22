@@ -1,9 +1,10 @@
 import type { User } from './user';
 
 export interface Post {
+  id: string;
   image?: string;
   message: string;
-  likes?: Array<User>;
+  likes: User[];
   author: User;
   create_at: Date;
   location: string;

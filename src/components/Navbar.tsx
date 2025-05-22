@@ -37,7 +37,7 @@ export default function Navbar() {
           >
             <span className="hidden sm:block">{user.username}</span>
             <img
-              src={user.avatar || '/public/DummyPFP.jpeg'}
+              src={user.avatar || '/DummyPFP.jpeg'}
               alt="Avatar"
               className="w-8 h-8 rounded-full object-cover border-2 border-white"
             />
