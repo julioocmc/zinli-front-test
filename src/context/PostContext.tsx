@@ -7,7 +7,7 @@ import type { User } from '../types/user';
 interface PostsContextType {
   posts: Post[];
   addPost: (post: Omit<Post, 'id'>) => void;
-  likePost: (id: string, user: User) => void;
+  toggleLike: (id: string, user: User) => void;
 }
 
 const PostsContext = createContext<PostsContextType | undefined>(undefined);
@@ -32,18 +32,19 @@ export function PostsProvider({ children }: { children: React.ReactNode }) {
     setPosts((prev) => [...prev, { ...post, id: uuid() }]);
   };
 
-  const likePost = (id: string, user: User) => {
+  const toggleLike = (id: string, user: User) =>
     setPosts((prev) =>
       prev.map((p) => {
         if (p.id !== id) return p;
-        const already = p.likes?.some((u) => u.username === user.username);
-        return already ? p : { ...p, likes: [...(p.likes ?? []), user] };
+
+        const liked = p.likes.some((u) => u.username === user.username);
+        return liked
+          ? { ...p, likes: p.likes.filter((u) => u.username !== user.username) }
+          : { ...p, likes: [...p.likes, user] };
       })
     );
-  };
-
   return (
-    <PostsContext.Provider value={{ posts, addPost, likePost }}>
+    <PostsContext.Provider value={{ posts, addPost, toggleLike }}>
       {children}
     </PostsContext.Provider>
   );
