@@ -1,4 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
+// src/context/PostsContext.tsx
 import { createContext, useContext, useEffect, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 import type { Post } from '../types/post';
@@ -8,6 +9,7 @@ interface PostsContextType {
   posts: Post[];
   addPost: (post: Omit<Post, 'id'>) => void;
   toggleLike: (id: string, user: User) => void;
+  updateStatus: (id: string, status: Post['status']) => void;
 }
 
 const PostsContext = createContext<PostsContextType | undefined>(undefined);
@@ -28,23 +30,28 @@ export function PostsProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('posts', JSON.stringify(posts));
   }, [posts]);
 
-  const addPost = (post: Omit<Post, 'id'>) => {
+  const addPost = (post: Omit<Post, 'id'>) =>
     setPosts((prev) => [...prev, { ...post, id: uuid() }]);
-  };
 
   const toggleLike = (id: string, user: User) =>
     setPosts((prev) =>
-      prev.map((p) => {
-        if (p.id !== id) return p;
-
-        const liked = p.likes.some((u) => u.username === user.username);
-        return liked
-          ? { ...p, likes: p.likes.filter((u) => u.username !== user.username) }
-          : { ...p, likes: [...p.likes, user] };
-      })
+      prev.map((p) =>
+        p.id === id
+          ? p.likes.some((u) => u.username === user.username)
+            ? {
+                ...p,
+                likes: p.likes.filter((u) => u.username !== user.username),
+              }
+            : { ...p, likes: [...p.likes, user] }
+          : p
+      )
     );
+
+  const updateStatus = (id: string, status: Post['status']) =>
+    setPosts((prev) => prev.map((p) => (p.id === id ? { ...p, status } : p)));
+
   return (
-    <PostsContext.Provider value={{ posts, addPost, toggleLike }}>
+    <PostsContext.Provider value={{ posts, addPost, toggleLike, updateStatus }}>
       {children}
     </PostsContext.Provider>
   );

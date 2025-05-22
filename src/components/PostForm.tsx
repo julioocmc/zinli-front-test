@@ -13,6 +13,7 @@ interface PostFormProps {
 export default function PostForm({ addPost, currentUser }: PostFormProps) {
   const [message, setMessage] = useState('');
   const [location, setLocation] = useState('');
+  const [asDraft, setAsDraft] = useState(false);
   const [imageBase64, setImageBase64] = useState<string | undefined>();
   const fileRef = useRef<HTMLInputElement | null>(null);
 
@@ -55,7 +56,7 @@ export default function PostForm({ addPost, currentUser }: PostFormProps) {
       author: currentUser,
       create_at: new Date(),
       likes: [],
-      status: 'published',
+      status: asDraft ? 'drafted' : 'published',
     };
 
     addPost(newPost);
@@ -68,7 +69,7 @@ export default function PostForm({ addPost, currentUser }: PostFormProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-primary-100/90 backdrop-blur-sm p-6 rounded-2xl mb-6 shadow-xl text-text-100 flex flex-col space-y-4"
+      className="bg-primary-100/90 p-6 rounded-2xl mb-6 shadow-xl text-text-100 flex flex-col space-y-4"
     >
       <textarea
         value={message}
@@ -105,6 +106,14 @@ export default function PostForm({ addPost, currentUser }: PostFormProps) {
           </button>
         </div>
       </div>
+      <label className="flex items-center gap-2 text-sm cursor-pointer">
+        <input
+          type="checkbox"
+          checked={asDraft}
+          onChange={() => setAsDraft(!asDraft)}
+        />
+        Guardar como borrador
+      </label>
       <div className="flex justify-end">
         <button
           type="submit"
