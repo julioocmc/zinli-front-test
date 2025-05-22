@@ -3,7 +3,7 @@ import type { Post } from '../types/post';
 import type { User } from '../types/user';
 
 interface PostFormProps {
-  addPost: (post: Post) => void;
+  addPost: (post: Omit<Post, 'id'>) => void;
   currentUser: User;
 }
 
@@ -48,7 +48,7 @@ export default function PostForm({ addPost, currentUser }: PostFormProps) {
       setError(validationError);
       return;
     }
-    const newPost: Post = {
+    const newPost: Omit<Post, 'id'> = {
       message,
       location,
       image: imageBase64,
@@ -57,6 +57,7 @@ export default function PostForm({ addPost, currentUser }: PostFormProps) {
       likes: [],
       status: 'published',
     };
+
     addPost(newPost);
     setMessage('');
     setLocation('');

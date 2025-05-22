@@ -1,4 +1,3 @@
-// src/utils/timeAgo.ts
 export function timeAgo(date: Date | string): string {
   const now = new Date();
   const past = new Date(date);

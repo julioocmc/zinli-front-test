@@ -1,23 +1,13 @@
 import type { Post } from '../types/post';
 import { useAuth } from '../context/AuthContext';
-import { usePosts } from '../hooks/usePosts';
-import { timeAgo } from '../utils/timeAgo'; // asumimos que lo tienes
+import { timeAgo } from '../utils/timeAgo';
+import { usePosts } from '../context/PostContext';
 
-interface Props {
-  post: Post;
-  index: number;
-}
-
-export default function PostCard({ post, index }: Props) {
+export default function PostCard({ post }: { post: Post }) {
   const { user } = useAuth();
   const { likePost } = usePosts();
 
   const hasLiked = post.likes?.some((u) => u.username === user?.username);
-
-  const handleLike = () => {
-    if (!user || hasLiked) return;
-    likePost(index, user);
-  };
 
   return (
     <div className="bg-bg-100 rounded-xl p-4 shadow">
@@ -46,14 +36,8 @@ export default function PostCard({ post, index }: Props) {
 
       <p className="mb-1">{post.message}</p>
 
-      <button
-        onClick={handleLike}
-        className={`text-sm font-semibold cursor-pointer ${
-          hasLiked ? 'text-red-500' : 'text-text-200'
-        }`}
-        disabled={hasLiked}
-      >
-        ❤️ {post.likes?.length || 0} Me gusta
+      <button onClick={() => user && !hasLiked && likePost(post.id, user)}>
+        ❤️ {post.likes?.length ?? 0} Me gusta
       </button>
     </div>
   );

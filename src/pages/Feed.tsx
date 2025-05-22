@@ -2,19 +2,16 @@ import { useAuth } from '../context/AuthContext';
 import Footer from '../components/Footer';
 import PostCard from '../components/PostCard';
 import Navbar from '../components/Navbar';
-import { usePosts } from '../hooks/usePosts';
 import PostForm from '../components/PostForm';
+import { usePosts } from '../context/PostContext';
 
 export default function Feed() {
   const { user } = useAuth();
   const { posts, addPost } = usePosts();
 
-  const publishedPosts = posts
-    .filter((post) => post.status === 'published') // Mostrar solo los publicados
-    .sort(
-      (a, b) =>
-        new Date(b.create_at).getTime() - new Date(a.create_at).getTime()
-    );
+  const published = posts
+    .filter((p) => p.status === 'published')
+    .sort((a, b) => b.create_at.getTime() - a.create_at.getTime());
 
   if (!user) {
     return (
@@ -37,12 +34,12 @@ export default function Feed() {
 
         <h1 className="text-2xl font-bold mb-4">Publicaciones recientes</h1>
 
-        {publishedPosts.length === 0 ? (
+        {published.length === 0 ? (
           <p className="text-center text-text-200">No hay publicaciones aún.</p>
         ) : (
           <div className="flex flex-col gap-4">
-            {publishedPosts.map((post, index) => (
-              <PostCard key={index} post={post} index={index} />
+            {published.map((post, index) => (
+              <PostCard key={index} post={post} />
             ))}
           </div>
         )}
