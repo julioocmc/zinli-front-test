@@ -1,44 +1,84 @@
-# Zinli Front-End Test
+# Zinli — Prueba Técnica Front-End
 
-![CI](https://github.com/julioocmc/https://github.com/julioocmc/zinli-front-test.git/actions/workflows/ci.yml/badge.svg)
+### Demo en producción
 
-Pequeña red social tipo Instagram/Twitter hecha con **React + Vite**, **TypeScript**, **Tailwind** y persistencia en `localStorage`.
-
-## Features principales
-
-- Registro y login (solo `username` para login)
-- Crear publicaciones con imagen, ubicación, estados **draft/published/deleted**
-- Likes únicos con animación (Framer Motion)
-- Perfil con pestañas **Publicados / Borradores / Eliminados**
-- Estado persistente mediante `PostsContext`
-- UI accesible y responsiva
-
-## Workflow
-
-| Paso          | Regla                                               |
-| ------------- | --------------------------------------------------- |
-| `main`        | Rama **protegida** – no se permiten pushes directos |
-| Ramas feature | `feat/*`, correcciones `fix/*`, tareas `chore/*`    |
-| Pull Requests | Revisión obligatoria (1 approval) para merge        |
-| CI            | GitHub Actions ejecuta `pnpm build` en cada push/PR |
-
-Ejemplos de PR cerrados:  
-`setup/project-structure`, `feat/login`, `feat/post`, `docs/workflow`.
+<https://zinli-test.netlify.app/>
 
 ---
 
-## Scripts
+## Descripción general
 
-| Comando        | Descripción                   |
-| -------------- | ----------------------------- |
-| `pnpm dev`     | Servidor local con HMR        |
-| `pnpm build`   | Compilación producción        |
-| `pnpm preview` | Vista previa producción local |
+Aplicación web que emula una red social ligera. Los usuarios pueden:
 
-## Stack
+- registrarse e iniciar sesión,
+- crear publicaciones con imagen, texto y ubicación,
+- indicar “me gusta” (solo uno por usuario),
+- gestionar borradores y eliminados,
+- exportar / importar sus propias publicaciones en formato JSON.
 
-- React 18 + Vite + TS
-- Tailwind CSS con paleta custom
-- React Router v6
-- Sonner (toasts)
-- Heroicons, Lucide, Framer Motion
+Toda la información se mantiene en el navegador mediante **localStorage**.
+
+---
+
+## Funcionalidades principales
+
+| Área              | Detalle                                                                            |
+| ----------------- | ---------------------------------------------------------------------------------- |
+| **Autenticación** | Registro (avatar, username, nombre, apellido) e inicio de sesión solo con username |
+| **Publicaciones** | Estados _draft / published / deleted_, imagen opcional, ubicación                  |
+| **Likes**         | Un like por usuario; animación con Framer Motion y listado completo en modal       |
+| **Perfil**        | Pestañas _Publicados_, _Borradores_, _Eliminados_; exportación / importación JSON  |
+| **Feed**          | Línea temporal global, filtro “Mis posts” y buscador en tiempo real                |
+| **Persistencia**  | Contexto React + localStorage                                                      |
+
+---
+
+## Tecnologías utilizadas
+
+- **React 18** + **Vite**
+- **TypeScript**
+- **Tailwind CSS** (paleta personalizada)
+- **React Router v6**
+- **Framer Motion** (animaciones)
+- **Sonner** (notificaciones)
+- **Vitest + React Testing Library** (tests unitarios)
+
+---
+
+## Cómo ejecutar el proyecto localmente
+
+> Puedes usar **npm** (clásico) o **pnpm** (más rápido y ahorra espacio).  
+> Los comandos son los mismos; solo cambia la palabra inicial.
+
+| Tarea                                        | con **pnpm**   | con **npm**       |
+| -------------------------------------------- | -------------- | ----------------- |
+| Instalar dependencias                        | `pnpm install` | `npm install`     |
+| Servidor de desarrollo (recarga en caliente) | `pnpm dev`     | `npm run dev`     |
+| Compilar para producción                     | `pnpm build`   | `npm run build`   |
+| Previsualizar la build                       | `pnpm preview` | `npm run preview` |
+| Ejecutar tests unitarios                     | `pnpm test`    | `npm test`        |
+
+> Si no tienes **pnpm**: `npm i -g pnpm` (un minuto) o utiliza los comandos de la columna npm.
+
+---
+
+## Flujo de trabajo en Git
+
+- **`main`** es una rama protegida (no se admite push directo).
+- Se trabaja en ramas temáticas: `feat/*`, `fix/*`, `chore/*`, `docs/*`.
+- Todo se integra mediante **Pull Request** con al menos una aprobación.
+- **GitHub Actions** comprueba que la aplicación compila (`pnpm build`) en cada push / PR.
+
+Ejemplos de PR ya fusionados:  
+`feat/login`, `feat/post-feed`, `docs/workflow`, `test/basic`.
+
+---
+
+## Tests incluidos
+
+1. **PostForm**: verifica que al enviar el formulario se llama a `addPost` con los datos correctos.
+2. **PostCard**: comprueba que `toggleLike` se ejecuta al pulsar el botón de “me gusta”.
+
+Se ejecutan con `pnpm test` o `npm test`.
+
+---
