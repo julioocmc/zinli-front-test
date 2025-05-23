@@ -1,6 +1,6 @@
 # Zinli Front-End Test
 
-![CI](https://github.com/tu-user/tu-repo/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/julioocmc/https://github.com/julioocmc/zinli-front-test.git/actions/workflows/ci.yml/badge.svg)
 
 Pequeña red social tipo Instagram/Twitter hecha con **React + Vite**, **TypeScript**, **Tailwind** y persistencia en `localStorage`.
 

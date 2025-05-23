@@ -22,7 +22,6 @@ export default function Login() {
     }
     const user = findUserByUsername(username);
     if (!user) {
-      setError('Usuario no registrado');
       toast.error('Usuario no registrado');
       return;
     }

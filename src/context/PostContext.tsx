@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
-// src/context/PostsContext.tsx
 import { createContext, useContext, useEffect, useState } from 'react';
 import { v4 as uuid } from 'uuid';
+import { faker } from '@faker-js/faker';
 import type { Post } from '../types/post';
 import type { User } from '../types/user';
 
@@ -14,16 +14,42 @@ interface PostsContextType {
 
 const PostsContext = createContext<PostsContextType | undefined>(undefined);
 
+function generateDummyData(): Post[] {
+  const dummyUsers: User[] = Array.from({ length: 5 }).map(() => ({
+    avatar: faker.image.avatarGitHub(),
+    username: faker.internet.username().toLowerCase(),
+    name: faker.person.firstName(),
+    surname: faker.person.lastName(),
+  }));
+
+  return Array.from({ length: 12 }).map(() => {
+    const author = faker.helpers.arrayElement(dummyUsers);
+    return {
+      id: uuid(),
+      image: faker.image.urlPicsumPhotos({ width: 600, height: 400 }),
+      message: faker.lorem.sentences({ min: 2, max: 4 }),
+      likes: [],
+      author,
+      create_at: faker.date.recent({ days: 7 }),
+      location: faker.location.city(),
+      status: 'published' as const,
+    };
+  });
+}
+
 export function PostsProvider({ children }: { children: React.ReactNode }) {
   const [posts, setPosts] = useState<Post[]>(() => {
     const stored = localStorage.getItem('posts');
-    return stored
-      ? JSON.parse(stored, (_k, v) =>
-          typeof v === 'string' && /^\d{4}-\d{2}-\d{2}T/.test(v)
-            ? new Date(v)
-            : v
-        )
-      : [];
+
+    if (stored) {
+      return JSON.parse(stored, (_k, v) =>
+        typeof v === 'string' && /^\d{4}-\d{2}-\d{2}T/.test(v) ? new Date(v) : v
+      );
+    }
+
+    const seed = generateDummyData();
+    localStorage.setItem('posts', JSON.stringify(seed));
+    return seed;
   });
 
   useEffect(() => {

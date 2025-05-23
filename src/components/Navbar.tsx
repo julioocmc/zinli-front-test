@@ -1,8 +1,16 @@
 import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
+import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 
-export default function Navbar() {
+interface NavbarProps {
+  search?: {
+    query: string;
+    setQuery: (val: string) => void;
+  };
+}
+
+export default function Navbar({ search }: NavbarProps) {
   const { user, logout } = useAuth();
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -24,8 +32,21 @@ export default function Navbar() {
   return (
     <nav className="bg-primary-100 text-white p-4 flex justify-between items-center shadow">
       <Link to="/feed" className="font-bold text-lg">
-        Zinli Test
+        Digital Tech Inc.{' '}
       </Link>
+
+      {location.pathname === '/feed' && search && (
+        <div className="relative w-52 mr-4 hidden sm:block">
+          <MagnifyingGlassIcon className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-text-200" />
+          <input
+            type="text"
+            placeholder="Buscar..."
+            value={search.query}
+            onChange={(e) => search.setQuery(e.target.value)}
+            className="w-full pl-8 pr-2 py-1.5 rounded-lg bg-bg-300 placeholder:text-text-200 text-sm focus:outline-none focus:ring-2 focus:ring-accent-100"
+          />
+        </div>
+      )}
 
       {user && (
         <div className="relative" ref={menuRef}>
@@ -57,7 +78,7 @@ export default function Navbar() {
               </p>
             </div>
             <Link
-              to="/profile" // pendiente
+              to="/profile"
               onClick={() => setOpen(false)}
               className="block px-4 p-2 hover:bg-white/20"
             >

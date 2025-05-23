@@ -1,4 +1,3 @@
-// src/components/PostForm.tsx
 import { useState, useRef } from 'react';
 import { toast } from 'sonner';
 import { Image as ImageIcon } from 'lucide-react';
