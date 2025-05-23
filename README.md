@@ -2,7 +2,23 @@
 
 ### Demo en producción
 
-<https://zinli-test.netlify.app/>
+[https://zinli-test.netlify.app/](https://zinli-test.netlify.app/)
+
+---
+
+## Capturas de pantalla
+
+![Registro de usuario](/public/register.jpeg)
+_Pantalla de registro donde el usuario ingresa avatar, username, nombre y apellido._
+
+![Feed de publicaciones](/public/feed.jpeg)
+_Vista principal con todas las publicaciones, buscador en tiempo real y menú desplegable en ícono del avatar del usuario que permite navegar al perfil o cerrar sesión._
+
+![Perfil de usuario](/public/profile.jpeg)
+_Sección de perfil con pestañas de Publicados, Borradores y Eliminados._
+
+![Tests unitarios](/public/test.jpeg)
+_Ejecución de tests con Vitest y React Testing Library._
 
 ---
 
@@ -47,7 +63,7 @@ Toda la información se mantiene en el navegador mediante **localStorage**.
 
 ## Cómo ejecutar el proyecto localmente
 
-> Puedes usar **npm** (clásico) o **pnpm** (más rápido y ahorra espacio).  
+> Puedes usar **npm** (clásico) o **pnpm** (más rápido y ahorra espacio).
 > Los comandos son los mismos; solo cambia la palabra inicial.
 
 | Tarea                                        | con **pnpm**   | con **npm**       |
@@ -69,7 +85,7 @@ Toda la información se mantiene en el navegador mediante **localStorage**.
 - Todo se integra mediante **Pull Request** con al menos una aprobación.
 - **GitHub Actions** comprueba que la aplicación compila (`pnpm build`) en cada push / PR.
 
-Ejemplos de PR ya fusionados:  
+Ejemplos de PR ya fusionados:
 `feat/login`, `feat/post-feed`, `docs/workflow`, `test/basic`.
 
 ---
@@ -80,5 +96,3 @@ Ejemplos de PR ya fusionados:
 2. **PostCard**: comprueba que `toggleLike` se ejecuta al pulsar el botón de “me gusta”.
 
 Se ejecutan con `pnpm test` o `npm test`.
-
----
