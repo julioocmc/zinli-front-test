@@ -1,4 +1,3 @@
-// src/pages/Feed.tsx
 import { useState, useDeferredValue } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -6,7 +5,6 @@ import PostForm from '../components/PostForm';
 import PostCard from '../components/PostCard';
 import { useAuth } from '../context/AuthContext';
 import { usePosts } from '../context/PostContext';
-import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 
 export default function Feed() {
   const { user } = useAuth();
@@ -40,23 +38,10 @@ export default function Feed() {
 
   return (
     <div className="flex flex-col min-h-screen bg-bg-200 text-text-100">
-      <Navbar />
+      <Navbar search={{ query, setQuery }} />
 
       <main className="flex-grow p-4 max-w-2xl mx-auto w-full space-y-6">
         <PostForm addPost={addPost} currentUser={user} />
-
-        <div className="flex justify-end">
-          <div className="relative w-52">
-            <MagnifyingGlassIcon className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-text-200" />
-            <input
-              type="text"
-              placeholder="Buscar..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              className="w-full pl-8 pr-2 py-2 rounded-lg bg-bg-300 placeholder:text-text-200 text-sm focus:outline-none focus:ring-2 focus:ring-accent-100"
-            />
-          </div>
-        </div>
 
         <div className="flex justify-center gap-4 text-sm font-semibold">
           <button
