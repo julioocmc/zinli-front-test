@@ -1,10 +1,10 @@
 import { useState, useDeferredValue } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import PostForm from '../components/PostForm';
-import PostCard from '../components/PostCard';
 import { useAuth } from '../context/AuthContext';
 import { usePosts } from '../context/PostContext';
+import PostForm from '../components/Post/PostForm';
+import PostCard from '../components/Post/PostCard';
 
 export default function Feed() {
   const { user } = useAuth();

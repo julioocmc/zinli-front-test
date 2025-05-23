@@ -1,8 +1,8 @@
 import { useState, useRef } from 'react';
 import { toast } from 'sonner';
 import { Image as ImageIcon } from 'lucide-react';
-import type { Post } from '../types/post';
-import type { User } from '../types/user';
+import type { Post } from '../../types/post';
+import type { User } from '../../types/user';
 
 interface PostFormProps {
   addPost: (post: Omit<Post, 'id'>) => void;
