@@ -7,7 +7,7 @@ import { usePosts } from '../context/PostContext';
 
 export function usePostImportExport(username: string) {
   const { posts, addPost } = usePosts();
-  const fileRef = useRef<HTMLInputElement>(null);
+  const fileRef = useRef<HTMLInputElement>(null!);
 
   const exportMyPosts = () => {
     const mine = posts.filter((p) => p.author.username === username);

@@ -4,7 +4,7 @@ interface Props {
   onExport: () => void;
   onTriggerImport: () => void;
   onImport: React.ChangeEventHandler<HTMLInputElement>;
-  fileRef: RefObject<HTMLInputElement>;
+  fileRef: RefObject<HTMLInputElement> | null;
 }
 
 export function JsonButtons({
